@@ -1,6 +1,6 @@
 use crate::{
     application::{dto::UpdateTodoReq, gateways::TodoRepository},
-    domain::{enums::Color, Todo},
+    domain::Todo,
 };
 
 use super::TodoUsecase;
@@ -17,12 +17,13 @@ impl UpdateTodo {
 
 impl TodoUsecase<UpdateTodoReq, ()> for UpdateTodo {
     fn execute(&mut self, request: UpdateTodoReq) -> () {
-        let new_todo = Todo::new()
-            .set_id(request.id)
-            .set_title(request.title)
-            .set_description(request.description)
-            .set_color(request.color.unwrap_or(Color::Blue))
-            .set_is_completed(false);
+        let new_todo = Todo {
+            id: Some(request.id),
+            title: request.title,
+            description: request.description,
+            color: request.color,
+            is_completed: request.is_completed,
+        };
 
         self.repo.update_todo(new_todo)
     }

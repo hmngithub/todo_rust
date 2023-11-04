@@ -21,8 +21,34 @@ impl TodoRepository for TodoRepoInMem {
 
     fn update_todo(&mut self, todo: Todo) {
         let id = todo.id.clone().unwrap();
+        let old_todo = match self.data.get(&id) {
+            Some(vl) => vl,
+            None => {
+                println!("todo not find");
+                return;
+            }
+        };
+        let new_todo = Todo {
+            id: old_todo.clone().id,
+            title: match todo.title {
+                Some(vl) => Some(vl),
+                None => old_todo.clone().title,
+            },
+            description: match todo.description {
+                Some(vl) => Some(vl),
+                None => old_todo.clone().description,
+            },
+            color: match todo.color {
+                Some(vl) => Some(vl),
+                None => old_todo.clone().color,
+            },
+            is_completed: match todo.is_completed {
+                Some(vl) => Some(vl),
+                None => old_todo.is_completed,
+            },
+        };
         self.data.remove(&id);
-        self.add_todo(id, todo);
+        self.add_todo(id, new_todo);
         self.flush();
     }
 
@@ -37,7 +63,7 @@ impl TodoRepository for TodoRepoInMem {
             if req.all.is_some() {
                 data.push(i.1);
             } else if req.completed.is_some() && req.color.is_some() {
-                if req.completed.unwrap() == i.clone().1.is_completed
+                if req.completed.unwrap() == i.clone().1.is_completed.unwrap()
                     && i.clone().1.color.unwrap() == req.color.clone().unwrap()
                 {
                     data.push(i.1);
@@ -47,7 +73,7 @@ impl TodoRepository for TodoRepoInMem {
                     data.push(i.1);
                 }
             } else if req.completed.is_some() {
-                if req.completed.unwrap() == i.clone().1.is_completed {
+                if req.completed.unwrap() == i.clone().1.is_completed.unwrap() {
                     data.push(i.1);
                 }
             }

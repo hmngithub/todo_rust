@@ -7,7 +7,7 @@ pub struct Todo {
     pub title: Option<String>,
     pub description: Option<String>,
     pub color: Option<Color>,
-    pub is_completed: bool,
+    pub is_completed: Option<bool>,
 }
 
 impl Todo {
@@ -17,7 +17,7 @@ impl Todo {
             title: None,
             description: None,
             color: None,
-            is_completed: false,
+            is_completed: Some(false),
         }
     }
 }
@@ -44,7 +44,7 @@ impl Todo {
     }
 
     pub fn set_is_completed(mut self, is_completed: bool) -> Self {
-        self.is_completed = is_completed;
+        self.is_completed = Some(is_completed);
         self
     }
 }

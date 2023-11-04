@@ -1,36 +1,22 @@
-use crate::{
-    application::{
-        dto::ReadTodosReq,
-        usecases::{ReadTodos, TodoUsecase},
-    },
-    domain::enums::Color,
-    infrastructure::TodoRepoInMem,
-};
 use colored::{self, Colorize};
 
-pub struct PrintColor;
+use crate::domain::Todo;
 
-impl PrintColor {
+pub struct PrintDataColor;
+
+impl PrintDataColor {
     pub fn new() -> Self {
         Self
     }
 }
 
-impl PrintColor {
-    pub fn print_with_color(&mut self) {
-        let repo = Box::new(TodoRepoInMem::new());
-        let mut usecase = ReadTodos::new(repo);
-
-        let request = ReadTodosReq {
-            all: None,
-            color: Some(Color::Red),
-            completed: Some(true),
-        };
-
-        for i in usecase.execute(request) {
+impl PrintDataColor {
+    pub fn print_with_color(todos: Vec<Todo>) {
+        for i in todos {
             if i.clone().color.unwrap().is_red() {
                 let d = "----------------------------------------".bright_red();
                 println!("{}", d);
+                println!("{} : {}", "id".bright_red(), i.id.unwrap().bright_red());
                 println!(
                     "{} : {}",
                     "title".bright_red(),
@@ -45,7 +31,7 @@ impl PrintColor {
                 println!(
                     "\x1B[41m {} : {} \x1B[0m",
                     "is_complete",
-                    i.is_completed.to_string()
+                    i.is_completed.unwrap().to_string()
                 );
 
                 println!();
@@ -53,6 +39,7 @@ impl PrintColor {
             } else if i.clone().color.unwrap().is_blue() {
                 let d = "----------------------------------------".bright_blue();
                 println!("{}", d);
+                println!("{} : {}", "id".bright_blue(), i.id.unwrap().bright_blue());
                 println!(
                     "{} : {}",
                     "title".bright_blue(),
@@ -67,13 +54,14 @@ impl PrintColor {
                 println!(
                     "\x1B[44m {} : {} \x1B[0m ",
                     "is_complete",
-                    i.is_completed.to_string()
+                    i.is_completed.unwrap().to_string()
                 );
                 println!();
                 continue;
             } else if i.clone().color.unwrap().is_green() {
                 let d = "----------------------------------------".bright_green();
                 println!("{}", d);
+                println!("{} : {}", "id".bright_green(), i.id.unwrap().bright_green());
                 println!(
                     "{} : {}",
                     "title".bright_green(),
@@ -88,20 +76,21 @@ impl PrintColor {
                 println!(
                     "\x1B[42m {} : {} \x1B[0m",
                     "is_complete",
-                    i.is_completed.to_string()
+                    i.is_completed.unwrap().to_string()
                 );
                 println!();
                 continue;
             } else {
                 let d = "----------------------------------------";
                 println!("{}", d);
+                println!("id : {}", i.id.unwrap());
                 println!("{} : {}", "title", i.title.unwrap());
                 println!("{} : {}", "description", i.description.unwrap());
                 println!("{} : {}", "color", "red");
                 println!(
                     "\x1B[43m {} : {}",
                     "is_complete",
-                    i.is_completed.to_string()
+                    i.is_completed.unwrap().to_string()
                 );
                 println!();
             }
