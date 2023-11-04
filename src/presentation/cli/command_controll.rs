@@ -2,7 +2,7 @@ use clap::{Arg, Command};
 
 use crate::{
     application::{
-        dto::{CreateTodoReq, DeleteTodoReq, ReadTodoReq, ReadTodosReq, UpdateTodoReq},
+        dto::{CreateTodoReq, DeleteTodoReq, ReadTodosReq, UpdateTodoReq},
         gateways::{IdGenerator, TodoRepository},
         usecases::{CreateTodo, DeleteTodo, ReadTodos, TodoUsecase, UpdateTodo},
     },
